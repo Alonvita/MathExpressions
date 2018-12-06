@@ -32,6 +32,8 @@ smart_ptr<Expression>* MathExpressionsParser::parse_mathematical_expression(cons
 
     // TODO: DEBUG: print expression -> remove this
     printExpression(expressionAsPostFix);
+
+    return(new smart_ptr<Expression> (new Num(44)));
     return nullptr;
 }
 
@@ -242,6 +244,55 @@ std::list<std::string> MathExpressionsParser::splitString(const std::string &inp
 
     return output;
 }
+
+/**
+ * MathExpressionsParser::createExpressionFromPostFixList.
+ *
+ * @param postfixExpression const std::list<std::string>& -- a const reference to a list<string> representing a postfix expression.
+ *
+ * @return a smart_ptr pointing to the Expression represented by the given list.
+ *
+ * Pseudo source: http://faculty.cs.niu.edu/~hutchins/csci241/eval.htm
+ */
+smart_ptr<Expression>* MathExpressionsParser::
+    createExpressionFromPostFixList(
+            const std::list<std::string>& postfixExpression,
+            const map<std::string, Num>& variablesMap) {
+    stack<std::string> stack;
+
+    // iterate on every string
+    for(std::string str : postfixExpression) {
+        // operator found
+        if(isOperator(str)) {
+            // create an expression holding the operands popped from the stack
+            // it's a stack so RHS first!
+            Num rhsExp(0);
+            std::string rhs = stack.top();
+            stack.pop(); // used -> pop it
+
+            // if it is an existing variable, just get the expression itself
+            if(getStrLocationInMap(str, variablesMap) != variablesMap.end()) {
+
+            }
+
+            // then make LHS
+
+            stack.pop(); // used -> pop it
+        }
+
+        // reaching here means it's a variable or number.
+        stack.push(str);
+    }
+//    If an operator is found
+//    Pop the stack and call the value A
+//    Pop the stack and call the value B
+//    Evaluate B op A using the operator just found.
+//            Push the resulting value onto the stack
+//    End-If
+//    End-While
+//    Pop the stack (this is the final value)*/
+}
+
 
 ///---------- DEBUGGING ----------
 /**

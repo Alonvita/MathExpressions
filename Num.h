@@ -15,6 +15,11 @@ public:
 
     double evaluate() override;
     std::string toString() override;
+
+    /// -------- OPERATORS OVERLOADING --------
+    Num& operator=(double);
+    Num& operator=(const Num&);
+    Num& operator=(const std::string&);
 private:
     double value;
 };

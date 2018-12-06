@@ -41,6 +41,7 @@ private:
     map<std::string, Num>::iterator getStrLocationInMap(const std::string &str, map<std::string, Num> variablesMap);
     std::list<std::string> splitString(const std::string &input, const std::string &delimiterStr, bool keepSpaces, bool keepDelimiters);
     void splitStringToList(const std::string &input, const std::string& delimiterStr, std::list<std::string> &outList, bool keepDelimiters);
+    smart_ptr<Expression>* createExpressionFromPostFixList(const std::list<std::string>& postfixExpression, const map<std::string, Num>& variablesMap);
 
     ///---------- DEBUGGING ----------
     void printExpression(const std::list<std::string>& exp);
