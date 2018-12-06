@@ -18,12 +18,20 @@ smart_ptr<Expression>* MathExpressionsParser::parse_mathematical_expression(cons
     std::list<std::string> expressionAsList =
             splitString(rawExpression, DELIMITERS, false, true);
 
-    for(std::string s : expressionAsList)
-        cout << s;
+    // strip from trailing spaces
+    for(std::string& str : expressionAsList) {
+        std::string::iterator end_pos = std::remove(str.begin(), str.end(), ' ');
+        str.erase(end_pos, str.end());
+    }
+
+    // TODO: DEBUG: print expression -> remove this
+    printExpression(expressionAsList);
 
     std::list<std::string> expressionAsPostFix;
     prefixToPostFix(expressionAsList, expressionAsPostFix);
 
+    // TODO: DEBUG: print expression -> remove this
+    printExpression(expressionAsPostFix);
     return nullptr;
 }
 
@@ -233,4 +241,18 @@ std::list<std::string> MathExpressionsParser::splitString(const std::string &inp
     }
 
     return output;
+}
+
+///---------- DEBUGGING ----------
+/**
+ * printExpression(const std::list<std::string> &exp).
+ *
+ * @param exp const std::list<std::string> & -- a list<string. representing a mathematical expression
+ */
+void MathExpressionsParser::printExpression(const std::list<std::string> &exp) {
+    cout << "\n\n---- Expression Print Check BEGIN ---- \n";
+    for(std::string s : exp)
+        cout << s << " ";
+    cout << "\n";
+    cout << "---- Expression Print Check END ---- \n";
 }

@@ -13,7 +13,9 @@ set(UTILITIES
         #ReferenceCounting
         Reference_Counting/ReferenceCount.h
         #SmartPtr
-        Reference_Counting/SmartPtr.h)
+        Reference_Counting/SmartPtr.h
+        #Utility
+        Utility/UtilityFunctions.cpp Utility/UtilityFunctions.h)
 
 set(SOURCE_FILES
         #Expression
