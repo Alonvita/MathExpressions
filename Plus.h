@@ -6,8 +6,16 @@
 #define MATHEXPRESSIONS_PLUS_H
 
 
-class Plus {
+#include "BinaryExpression.h"
 
+class Plus : public BinaryExpression {
+public:
+    Plus(double, double);
+    Plus(const std::string&, const std::string&);
+    Plus(smart_ptr<Expression>* lhs, smart_ptr<Expression>* rhs) : BinaryExpression(lhs, rhs) {};
+
+    double evaluate() override;
+    std::string toString() override;
 };
 
 

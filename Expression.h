@@ -10,8 +10,8 @@
 
 class Expression {
 public:
+    virtual double evaluate() = 0 ;
     virtual std::string toString() = 0;
-    virtual double evaluate() = 0;
 };
 
 #endif //MATHEXPRESSIONS_EXPRESSION_H

@@ -19,6 +19,7 @@ class smart_ptr {
 private:
     T* m_Object{ nullptr };
     ReferenceCount* m_ReferenceCount{ nullptr };
+
 public:
     smart_ptr() {}
     //Constructor
@@ -27,14 +28,13 @@ public:
             , m_ReferenceCount{ new ReferenceCount() }
     {
         m_ReferenceCount->Increment();
-        cout << "Created smart_ptr! Ref count is " << m_ReferenceCount->GetCount();
+        cout << "Created smart_ptr! Ref count is " << m_ReferenceCount->GetCount() << "\n";
     }
     //Destructor
     virtual ~smart_ptr() {
-        if (m_ReferenceCount)
-        {
+        if (m_ReferenceCount) {
             int decrementedCount = m_ReferenceCount->Decrement();
-            cout << "Destroyed smart_ptr! Ref count is " << decrementedCount;
+            cout << "Destroyed smart_ptr! Ref count is " << decrementedCount << "\n";
             if (decrementedCount <= 0)
             {
                 delete m_ReferenceCount;
@@ -50,7 +50,7 @@ public:
             m_ReferenceCount{ other.m_ReferenceCount } {
         m_ReferenceCount->Increment();
         cout << "Copied smart_ptr! Ref count is "
-             << m_ReferenceCount->GetCount();
+             << m_ReferenceCount->GetCount() << "\n";
     }
 
     // Overloaded Assignment Operator

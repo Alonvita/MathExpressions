@@ -15,7 +15,7 @@ set(SOURCE_FILES
         #Num
         Num.cpp Num.h
         #BinaryExpression
-        BinaryExpression.cpp BinaryExpression.h
+        BinaryExpression.h
         #Plus
         Plus.cpp Plus.h)
 

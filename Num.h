@@ -8,7 +8,7 @@
 
 #include "Expression.h"
 
-class Num : Expression {
+class Num : public Expression {
 public:
     Num(std::string);
     Num(double number) : value(number) {};
