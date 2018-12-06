@@ -25,13 +25,14 @@ int main() {
     double val = p_smrt_ptr3->evaluate();
     std::cout << p_smrt_ptr3->toString() << ": " << val << "\n";
 
-    MathExpressionsParser parser;
+
 
     parser.parse_mathematical_expression("(x+532)-y\n");*/
 
-    std::string test = "9";
+    std::string test = "((2x + 5 * 22) * 19 - hammond) ";
     std::string checks = "+-)(*/";
 
-    if(test.find_first_of(checks) != test.npos)
-        cout << "WORKS\n";
+
+    MathExpressionsParser parser;
+    parser.parse_mathematical_expression(test);
 }

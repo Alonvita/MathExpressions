@@ -8,10 +8,15 @@
 #include <string>
 #include <sstream>
 
-#define DIV_STR " / "
-#define PLUS_STR " + "
-#define MULT_STR " * "
-#define MINUS_STR " - "
+#define DIV_STR "/"
+#define PLUS_STR "+"
+#define MULT_STR "*"
+#define MINUS_STR "-"
+#define MODULO_STR "%"
+
+#define ABS_STR "abs"
+#define POW_STR "pow"
+#define ROOT_STR "root"
 
 enum UnaryOperation { SIN , COS, TAN, ABS, LOG };
 enum BinaryOperation { MINUS, PLUS, DIV, MULT };

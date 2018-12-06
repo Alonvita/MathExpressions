@@ -5,14 +5,22 @@
 #ifndef MATHEXPRESSIONS_PARSER_H
 #define MATHEXPRESSIONS_PARSER_H
 
-
+#include <map>
 #include <list>
+#include <stack>
 #include <string>
 #include <iterator>
 #include "../Expression.h"
 #include "../Reference_Counting/SmartPtr.h"
+#include "../Num.h"
 
-#define MATH_EXPRESSION_DELIMITERS "+-*/)("
+#define DELIMITERS "+-*/)("
+#define OPERATORS "+-*/"
+
+#define PRECEDENCE_ERROR -1
+#define LOW_PRECEDENCE 3
+#define MEDIUM_PRECEDENCE 4
+#define HIGH_PRECEDENCE 5
 
 class MathExpressionsParser {
 public:
@@ -22,10 +30,13 @@ public:
 
 private:
     ///---------- UTILITY FUNCTIONS ----------
-    bool isOperand(const std::string& str);
+    int precedence(const std::string& opL);
+    bool isNumeric(const std::string &str);
     bool isOperator(const std::string& str);
-    bool isParenthases(const std::string& str);
-    std::list<std::string>& prefixToPostFix(const std::list<std::string> mathExpressionAsList);
+    bool isLeftParentheses(const std::string &str);
+    bool isRightParentheses(const std::string &str);
+    void prefixToPostFix(const std::list<std::string>& mathExpressionAsList, std::list<std::string>& postfix);
+    map<std::string, Num>::iterator getStrLocationInMap(const std::string &str, map<std::string, Num> variablesMap);
     std::list<std::string> splitString(const std::string &input, const std::string &delimiterStr, bool keepSpaces, bool keepDelimiters);
     void splitStringToList(const std::string &input, const std::string& delimiterStr, std::list<std::string> &outList, bool keepDelimiters);
 };
