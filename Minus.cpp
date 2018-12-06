@@ -2,16 +2,16 @@
 // Created by alon on 06/12/18.
 //
 
-#include "Plus.h"
+#include "Minus.h"
 
 /**
  * evaluate().
  *
  * @return the evaluated value of the expression.
  */
-double Plus::evaluate() {
-    return(evaluateBinExpression(
-            PLUS,
+double Minus::evaluate() {
+    return (evaluateBinExpression(
+            MINUS,
             this->m_lhs->operator->()->evaluate(),
             this->m_rhs->operator->()->evaluate()));
 }
@@ -21,6 +21,6 @@ double Plus::evaluate() {
  *
  * @return a string representation of the expression
  */
-std::string Plus::toString() {
-    return binExpressionToString(PLUS);
+std::string Minus::toString() {
+    return binExpressionToString(MINUS);
 }

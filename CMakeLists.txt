@@ -15,8 +15,14 @@ set(SOURCE_FILES
         #Num
         Num.cpp Num.h
         #BinaryExpression
-        BinaryExpression.h
+        BinaryExpression.cpp BinaryExpression.h
         #Plus
-        Plus.cpp Plus.h)
+        Plus.cpp Plus.h
+        #Minus
+        Minus.cpp Minus.h
+        #Div
+        Div.cpp Div.h
+        #Mult
+        Mult.cpp Mult.h)
 
 add_executable(MathExpressions main.cpp ${SOURCE_FILES} ${UTILITIES})
