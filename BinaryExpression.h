@@ -5,13 +5,6 @@
 #ifndef MATHEXPRESSIONS_BINARYEXPRESSION_H
 #define MATHEXPRESSIONS_BINARYEXPRESSION_H
 
-#define DIV_STR " / "
-#define PLUS_STR " + "
-#define MULT_STR " * "
-#define MINUS_STR " - "
-
-enum BinaryOperation { MINUS, PLUS, DIV, MULT };
-
 #include "Num.h"
 #include "Expression.h"
 #include "Reference_Counting/SmartPtr.h"
