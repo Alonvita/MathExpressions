@@ -5,7 +5,7 @@
 using namespace std;
 
 int main() {
-    std::string test = "((2 + 5 * 22) * 19 - y) ";
+    std::string test = "(x + y * z + w) / t";
     std::string checks = "+-)(*/";
 
     map<std::string, double> variablesMap;
@@ -13,8 +13,9 @@ int main() {
 
     variablesMap.insert(make_pair("x", 15));
     variablesMap.insert(make_pair("y", 10));
-    variablesMap.insert(make_pair("z", 50));
-    variablesMap.insert(make_pair("w", 49));
+    variablesMap.insert(make_pair("z", 100));
+    variablesMap.insert(make_pair("w", 35));
+    variablesMap.insert(make_pair("t", 50));
 
     MathExpressionsParser parser;
     cout << "----- (MAIN) DEBUG: CHECK EVALUATION START -----";

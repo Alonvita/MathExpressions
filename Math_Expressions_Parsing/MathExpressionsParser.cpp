@@ -280,7 +280,7 @@ double MathExpressionsParser::evaluatePostfixList(
             double lhsD = getVariableValFromMapOrCreateDoubleForNumericVals(lhs, variablesMap);
 
             // evaluate using the operand and push to the stack.
-            stack.push(std::to_string(operateBinaryExpression(str, rhsD, lhsD)));
+            stack.push(std::to_string(operateBinaryExpression(str, lhsD, rhsD)));
             continue;
         }
 
