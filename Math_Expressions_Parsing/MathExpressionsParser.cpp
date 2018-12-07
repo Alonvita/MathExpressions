@@ -11,9 +11,12 @@
  *
  * @param rawExpression std::string -- a string representing a mathematical expression.
  *
- * @return an Expression created from the given string.
+ * @return the evaluated expression as a double.
  */
-smart_ptr<Expression>* MathExpressionsParser::parse_mathematical_expression(const std::string &rawExpression) {
+double MathExpressionsParser::
+    parse_mathematical_expression(
+            const std::string &rawExpression,
+            const map<std::string, double>& variablesMap) {
         // split the string into a list w/o spaces and keep delimiters (see function documentation for more info)
     std::list<std::string> expressionAsList =
             splitString(rawExpression, DELIMITERS, false, true);
@@ -33,8 +36,7 @@ smart_ptr<Expression>* MathExpressionsParser::parse_mathematical_expression(cons
     // TODO: DEBUG: print expression -> remove this
     printExpression(expressionAsPostFix);
 
-    return(new smart_ptr<Expression> (new Num(44)));
-    return nullptr;
+    return evaluatePostfixList(expressionAsPostFix, variablesMap);
 }
 
 ///---------- UTILITY FUNCTIONS ----------
@@ -129,14 +131,15 @@ int MathExpressionsParser::precedence(const std::string &op) {
  *
  * @param str const std::string& -- a reference to a string.
  *
- * @return true if the string contains only digits. Hence, a number
+ * @return true if the string contains only digits or '.', or false otherwise.
+ *
+ * Source: https://stackoverflow.com/questions/7616867/how-to-test-a-string-for-letters-only
  */
 bool MathExpressionsParser::isNumeric(const std::string &str) {
-    return ((str.end() ==
-             std::find_if(
-                     str.begin(),
-                     str.end(),
-                     [](unsigned char c)->bool { return !isdigit(c); })));
+    bool contains_non_alpha
+            = str.find_first_not_of("1234567890.") != std::string::npos;
+
+    return !contains_non_alpha;
 }
 
 /**
@@ -180,8 +183,8 @@ bool MathExpressionsParser::isRightParentheses(const std::string &str) {
  *
  * @return the iterator location to the string in the map (map.end() if doesn't exist).
  */
-map<std::string, Num>::iterator
-    MathExpressionsParser::getStrLocationInMap(const std::string &str, map<std::string, Num> variablesMap) {
+map<std::string, double>::iterator
+    MathExpressionsParser::getStrLocationInMap(const std::string &str, map<std::string, double> variablesMap) {
     return variablesMap.find(str);
 }
 
@@ -249,50 +252,101 @@ std::list<std::string> MathExpressionsParser::splitString(const std::string &inp
  * MathExpressionsParser::createExpressionFromPostFixList.
  *
  * @param postfixExpression const std::list<std::string>& -- a const reference to a list<string> representing a postfix expression.
+ * @param variablesMap const map<std::string, double> & -- a cont reference to a map of variables.
  *
- * @return a smart_ptr pointing to the Expression represented by the given list.
+ * @return the evaluated expressions as a double.
  *
  * Pseudo source: http://faculty.cs.niu.edu/~hutchins/csci241/eval.htm
  */
-smart_ptr<Expression>* MathExpressionsParser::
-    createExpressionFromPostFixList(
-            const std::list<std::string>& postfixExpression,
-            const map<std::string, Num>& variablesMap) {
+double MathExpressionsParser::evaluatePostfixList(
+        const std::list<std::string> &postfixExpression,
+        const map<std::string, double> &variablesMap) {
     stack<std::string> stack;
 
     // iterate on every string
     for(std::string str : postfixExpression) {
         // operator found
         if(isOperator(str)) {
-            // create an expression holding the operands popped from the stack
             // it's a stack so RHS first!
-            Num rhsExp(0);
             std::string rhs = stack.top();
             stack.pop(); // used -> pop it
 
-            // if it is an existing variable, just get the expression itself
-            if(getStrLocationInMap(str, variablesMap) != variablesMap.end()) {
-
-            }
+            double rhsD = getVariableValFromMapOrCreateDoubleForNumericVals(rhs, variablesMap);
 
             // then make LHS
-
+            std::string lhs = stack.top();
             stack.pop(); // used -> pop it
+
+            double lhsD = getVariableValFromMapOrCreateDoubleForNumericVals(lhs, variablesMap);
+
+            // evaluate using the operand and push to the stack.
+            stack.push(std::to_string(operateBinaryExpression(str, rhsD, lhsD)));
+            continue;
         }
 
         // reaching here means it's a variable or number.
         stack.push(str);
     }
-//    If an operator is found
-//    Pop the stack and call the value A
-//    Pop the stack and call the value B
-//    Evaluate B op A using the operator just found.
-//            Push the resulting value onto the stack
-//    End-If
-//    End-While
-//    Pop the stack (this is the final value)*/
+
+    // return the double value of the top of the stack (that is the evaluated value)
+    return stod(stack.top());
 }
 
+/**
+ * getVariableValFromMapOrCreateDoubleForNumericVals(
+                    const std::string &str,
+                    const map<std::string, double> &variablesMap).
+ * @param str const std::string & -- a const reference to a string.
+ * @param variablesMap const map<std::string, double> & -- a const reference to a variables map.
+ *
+ * @return str is either numeric or a variable.
+ *      If it is numeric -> return stod(str)
+ *      else, try to get it from map. an exception should be thrown should we try to reach variablesMap.end()
+ *       when the given str does not exist in the variables map.
+ */
+double MathExpressionsParser::
+    getVariableValFromMapOrCreateDoubleForNumericVals(
+        const std::string &str,
+        const map<std::string, double> &variablesMap) {
+    // check numeric
+    if(isNumeric(str)) {
+        return stod(str);
+    }
+
+    try {
+        // try to return the variable from the map
+        return (*getStrLocationInMap(str, variablesMap)).second;
+        // this would throw an error in case the returned it is at variablesMap.end()
+        // then we know that the variable does not exists.
+        // This might be handles differently, but for this program's purposes this will do...
+    } catch (std::runtime_error& error) {
+        cerr << "It is probable that the variable you are trying to extract from the map does not exist\n";
+    }
+}
+
+/**
+ * operateBinaryExpression(const std::string &operation, double lhs, double rhs).
+ *
+ * @param operation const std::string & -- a string representing a mathematical expression.
+ * @param lhs double -- a double.
+ * @param rhs double -- a double.
+ *
+ * @return the result of (lhs OP rhs)
+ */
+double MathExpressionsParser::operateBinaryExpression(const std::string &operation, double lhs, double rhs) {
+    if (operation == MINUS_STR)
+        return lhs - rhs;
+    if (operation == PLUS_STR)
+        return lhs + rhs;
+    if (operation == MULT_STR)
+        return lhs * rhs;
+    if (operation == DIV_STR)
+        return lhs / rhs;
+    if (operation == POW_STR)
+        return pow(lhs, rhs);
+    if(operation == MODULO_STR)
+        return ((int)lhs % (int)rhs);
+}
 
 ///---------- DEBUGGING ----------
 /**
