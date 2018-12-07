@@ -5,11 +5,10 @@
 using namespace std;
 
 int main() {
-    std::string test = "10 * -19";
+    std::string test = "- 10 * -19 / -10";
     std::string checks = "+-)(*/";
 
     map<std::string, double> variablesMap;
-
 
     variablesMap.insert(make_pair("x", 15));
     variablesMap.insert(make_pair("y", 10));
