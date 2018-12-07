@@ -5,7 +5,7 @@
 using namespace std;
 
 int main() {
-    std::string test = "(x + y * z + w) / t";
+    std::string test = "10 * -19";
     std::string checks = "+-)(*/";
 
     map<std::string, double> variablesMap;

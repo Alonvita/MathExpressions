@@ -17,7 +17,8 @@ double MathExpressionsParser::
     parse_mathematical_expression(
             const std::string &rawExpression,
             const map<std::string, double>& variablesMap) {
-        // split the string into a list w/o spaces and keep delimiters (see function documentation for more info)
+
+    // split the string into a list w/o spaces and keep delimiters (see function documentation for more info)
     std::list<std::string> expressionAsList =
             splitString(rawExpression, DELIMITERS, false, true);
 
@@ -26,6 +27,9 @@ double MathExpressionsParser::
         std::string::iterator end_pos = std::remove(str.begin(), str.end(), ' ');
         str.erase(end_pos, str.end());
     }
+
+    // handle any negation indicating "-" -> see function documentation for more details
+    addDummyZeroesBeforeNegationMinus(expressionAsList);
 
     // TODO: DEBUG: print expression -> remove this
     printExpression(expressionAsList);
@@ -136,8 +140,14 @@ int MathExpressionsParser::precedence(const std::string &op) {
  * Source: https://stackoverflow.com/questions/7616867/how-to-test-a-string-for-letters-only
  */
 bool MathExpressionsParser::isNumeric(const std::string &str) {
-    bool contains_non_alpha
-            = str.find_first_not_of("1234567890.") != std::string::npos;
+    bool contains_non_alpha;
+    // check negative number
+    if(str.size() > 1 && str[0] == '-') {
+        contains_non_alpha = str.substr(1).find_first_not_of("1234567890.") != std::string::npos;
+    } else {
+        contains_non_alpha = str.find_first_not_of("1234567890.") != std::string::npos;
+    }
+
 
     return !contains_non_alpha;
 }
@@ -346,6 +356,50 @@ double MathExpressionsParser::operateBinaryExpression(const std::string &operati
         return pow(lhs, rhs);
     if(operation == MODULO_STR)
         return ((int)lhs % (int)rhs);
+}
+
+/**
+ * addDummyZeroesBeforeNegationMinus(std::string &str).
+ *
+ * This function's purpose is to handle expressions such as:
+ *      expression <- -19
+ *      expression <- 10 * -y
+ * In which the "-" indicates a negation and not an operand.
+ *  the function will force push dummy zeroes to compensate.
+ *
+ * @param str std::string & -- a reference to a string
+ */
+void MathExpressionsParser::addDummyZeroesBeforeNegationMinus(std::list<std::string> & expressionAsList) {
+    // Local Variables
+    bool operandSeparatesTwoOperators = true;
+    auto it = expressionAsList.begin();
+
+    // check if expression starts with '-'
+    if ((*it) == "-")
+        expressionAsList.insert(it++, "0");
+
+    while (it != expressionAsList.end()) {
+        // number found
+        if(isNumeric(*it))
+            operandSeparatesTwoOperators = true; // set true
+
+        // check operator
+        if(isOperator(*it)) {
+            if(!operandSeparatesTwoOperators) {
+                // push 0 before this place
+                expressionAsList.insert(it, "(");
+                expressionAsList.insert(it, "0");
+                ++it;
+                ++it;
+                expressionAsList.insert(it, ")");
+            } else {
+                // operator found -> set false unless number was reached
+                operandSeparatesTwoOperators = false;
+            }
+        }
+
+        ++it;
+    }
 }
 
 ///---------- DEBUGGING ----------

@@ -45,11 +45,12 @@ private:
     bool isOperator(const std::string& str);
     bool isLeftParentheses(const std::string &str);
     bool isRightParentheses(const std::string &str);
+    void addDummyZeroesBeforeNegationMinus(std::list<std::string> & expressionAsList);
     double operateBinaryExpression(const std::string &operation, double lhs, double rhs);
     void prefixToPostFix(const std::list<std::string>& mathExpressionAsList, std::list<std::string>& postfix);
-    double getVariableValFromMapOrCreateDoubleForNumericVals(const std::string &str, const map<std::string, double> &variablesMap);
     map<std::string, double>::iterator getStrLocationInMap(const std::string &str, map<std::string, double> variablesMap);
     double evaluatePostfixList(const std::list<std::string> &postfixExpression, const map<std::string, double> &variablesMap);
+    double getVariableValFromMapOrCreateDoubleForNumericVals(const std::string &str, const map<std::string, double> &variablesMap);
     std::list<std::string> splitString(const std::string &input, const std::string &delimiterStr, bool keepSpaces, bool keepDelimiters);
     void splitStringToList(const std::string &input, const std::string& delimiterStr, std::list<std::string> &outList, bool keepDelimiters);
 
